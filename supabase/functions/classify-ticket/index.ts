@@ -1,6 +1,6 @@
 // Supabase Edge Function (Deno runtime)
-// Receives a ticket's title + description, asks Claude to classify it,
-// and returns structured JSON. The Anthropic API key never reaches the browser —
+// Receives a ticket's title + description, asks Gemini to classify it,
+// and returns structured JSON. The Gemini API key never reaches the browser —
 // it lives only in this function's environment variables (set via `supabase secrets set`).
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
@@ -39,37 +39,44 @@ serve(async (req) => {
       );
     }
 
-    const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!anthropicKey) {
+    const geminiKey = Deno.env.get("GEMINI_API_KEY");
+    if (!geminiKey) {
       return new Response(
-        JSON.stringify({ error: "Server is missing ANTHROPIC_API_KEY" }),
+        JSON.stringify({ error: "Server is missing GEMINI_API_KEY" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 500,
-        system: SYSTEM_PROMPT,
-        messages: [
-          {
-            role: "user",
-            content: `Title: ${title}\n\nDescription: ${description}`,
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": geminiKey,
+        },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: SYSTEM_PROMPT }],
           },
-        ],
-      }),
-    });
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: `Title: ${title}\n\nDescription: ${description}` }],
+            },
+          ],
+          generationConfig: {
+            // Ask Gemini to return raw JSON directly, skipping the "strip markdown fences" step entirely
+            responseMimeType: "application/json",
+            temperature: 0.3,
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("Anthropic API error:", errText);
+      console.error("Gemini API error:", errText);
       return new Response(
         JSON.stringify({ error: "AI classification failed", details: errText }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -77,13 +84,11 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const rawText = data.content?.[0]?.text ?? "";
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     let classification;
     try {
-      // Claude sometimes wraps JSON in ```json fences despite instructions — strip them defensively
-      const cleaned = rawText.replace(/```json|```/g, "").trim();
-      classification = JSON.parse(cleaned);
+      classification = JSON.parse(rawText);
     } catch (parseError) {
       console.error("Could not parse AI response:", rawText);
       return new Response(

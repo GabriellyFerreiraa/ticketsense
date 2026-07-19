@@ -1,6 +1,6 @@
 # 🎫 TicketSense
 
-An AI-powered support ticket triage system. Requesters describe their issue in plain language; Claude (Anthropic) automatically suggests a category, urgency level, and first diagnostic steps — the same first-response thinking a helpdesk analyst does manually, now assisted by AI.
+An AI-powered support ticket triage system. Requesters describe their issue in plain language; Google Gemini automatically suggests a category, urgency level, and first diagnostic steps — the same first-response thinking a helpdesk analyst does manually, now assisted by AI.
 
 🔗 **Live demo:** [add the link here after deploying]
 
@@ -16,7 +16,7 @@ Built to reflect real IT support/helpdesk experience: when a ticket comes in, an
 
 ### Features
 - Role-based access: **Requester** (opens and tracks their own tickets) and **Agent** (works the full queue)
-- AI-assisted triage on submission via a Supabase Edge Function calling the Claude API — the API key never reaches the browser
+- AI-assisted triage on submission via a Supabase Edge Function calling the Gemini API — the API key never reaches the browser
 - Agents can manually reclassify category/urgency and change ticket status
 - Row Level Security enforcing that requesters only ever see their own tickets
 - Graceful degradation: if the AI call fails, the ticket is still created and flagged for manual classification
@@ -25,7 +25,7 @@ Built to reflect real IT support/helpdesk experience: when a ticket comes in, an
 - React + TypeScript, Vite
 - Tailwind CSS + shadcn/ui
 - Supabase (PostgreSQL, Auth, Row Level Security, Edge Functions)
-- Claude (Anthropic API) for ticket classification
+- Google Gemini API for ticket classification
 
 ### Running locally
 ```bash
@@ -34,15 +34,15 @@ cd ticketsense
 npm install
 npm run dev
 ```
-This project connects to a live Supabase project and calls the Claude API through a Supabase Edge Function, so both need to be configured (see below) for full functionality.
+This project connects to a live Supabase project and calls the Gemini API through a Supabase Edge Function, so both need to be configured (see below) for full functionality.
 
 ### Setting it up from scratch
 1. Create a Supabase project and run the migration in `supabase/migrations/` via the SQL Editor
 2. Copy your Project URL and anon key into `src/integrations/supabase/client.ts`
-3. Get an API key from [console.anthropic.com](https://console.anthropic.com), then deploy the Edge Function and set the secret:
+3. Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey), then deploy the Edge Function and set the secret:
    ```bash
    supabase functions deploy classify-ticket
-   supabase secrets set ANTHROPIC_API_KEY=your_key_here
+   supabase secrets set GEMINI_API_KEY=your_key_here
    ```
 
 ---
@@ -54,7 +54,7 @@ Creado para reflejar experiencia real en soporte técnico/helpdesk: cuando llega
 
 ### Funcionalidades
 - Acceso según rol: **Requester** (abre y sigue sus propios tickets) y **Agent** (trabaja toda la cola)
-- Triage asistido por IA al enviar el ticket, mediante una Supabase Edge Function que llama a la API de Claude — la clave de API nunca llega al navegador
+- Triage asistido por IA al enviar el ticket, mediante una Supabase Edge Function que llama a la API de Gemini — la clave de API nunca llega al navegador
 - Los agentes pueden reclasificar manualmente categoría/urgencia y cambiar el estado del ticket
 - Row Level Security asegurando que cada requester solo vea sus propios tickets
 - Degradación elegante: si falla la llamada a la IA, el ticket se crea igual y queda marcado para clasificación manual
@@ -63,7 +63,7 @@ Creado para reflejar experiencia real en soporte técnico/helpdesk: cuando llega
 - React + TypeScript, Vite
 - Tailwind CSS + shadcn/ui
 - Supabase (PostgreSQL, Auth, Row Level Security, Edge Functions)
-- Claude (API de Anthropic) para clasificación de tickets
+- Google Gemini API para clasificación de tickets
 
 ### Cómo ejecutar localmente
 ```bash
@@ -72,15 +72,15 @@ cd ticketsense
 npm install
 npm run dev
 ```
-Este proyecto se conecta a un proyecto real de Supabase y llama a la API de Claude a través de una Supabase Edge Function, así que ambos deben configurarse (ver abajo) para el funcionamiento completo.
+Este proyecto se conecta a un proyecto real de Supabase y llama a la API de Gemini a través de una Supabase Edge Function, así que ambos deben configurarse (ver abajo) para el funcionamiento completo.
 
 ### Configurarlo desde cero
 1. Crea un proyecto de Supabase y corre la migration de `supabase/migrations/` desde el SQL Editor
 2. Copia tu Project URL y anon key en `src/integrations/supabase/client.ts`
-3. Consigue una API key en [console.anthropic.com](https://console.anthropic.com), luego despliega la Edge Function y configura el secreto:
+3. Consigue una API key gratis en [Google AI Studio](https://aistudio.google.com/app/apikey), luego despliega la Edge Function y configura el secreto:
    ```bash
    supabase functions deploy classify-ticket
-   supabase secrets set ANTHROPIC_API_KEY=tu_clave_aqui
+   supabase secrets set GEMINI_API_KEY=tu_clave_aqui
    ```
 
 ---
@@ -92,7 +92,7 @@ Criado pra refletir experiência real em suporte técnico/helpdesk: quando um ch
 
 ### Funcionalidades
 - Acesso por papel: **Requester** (abre e acompanha os próprios chamados) e **Agent** (trabalha a fila toda)
-- Triagem assistida por IA no envio do chamado, via uma Supabase Edge Function que chama a API da Claude — a chave de API nunca chega ao navegador
+- Triagem assistida por IA no envio do chamado, via uma Supabase Edge Function que chama a API do Gemini — a chave de API nunca chega ao navegador
 - Agentes podem reclassificar manualmente categoria/urgência e mudar o status do chamado
 - Row Level Security garantindo que cada requester só vê os próprios chamados
 - Degradação graciosa: se a chamada de IA falhar, o chamado é criado do mesmo jeito, marcado pra classificação manual
@@ -101,7 +101,7 @@ Criado pra refletir experiência real em suporte técnico/helpdesk: quando um ch
 - React + TypeScript, Vite
 - Tailwind CSS + shadcn/ui
 - Supabase (PostgreSQL, Auth, Row Level Security, Edge Functions)
-- Claude (API da Anthropic) pra classificação de chamados
+- Google Gemini API pra classificação de chamados
 
 ### Como rodar localmente
 ```bash
@@ -110,15 +110,15 @@ cd ticketsense
 npm install
 npm run dev
 ```
-Esse projeto se conecta a um projeto real do Supabase e chama a API da Claude através de uma Supabase Edge Function, então os dois precisam estar configurados (veja abaixo) pro funcionamento completo.
+Esse projeto se conecta a um projeto real do Supabase e chama a API do Gemini através de uma Supabase Edge Function, então os dois precisam estar configurados (veja abaixo) pro funcionamento completo.
 
 ### Configurando do zero
 1. Cria um projeto no Supabase e roda a migration de `supabase/migrations/` pelo SQL Editor
 2. Copia sua Project URL e anon key em `src/integrations/supabase/client.ts`
-3. Pega uma API key em [console.anthropic.com](https://console.anthropic.com), depois publica a Edge Function e configura o segredo:
+3. Pega uma API key grátis no [Google AI Studio](https://aistudio.google.com/app/apikey), depois publica a Edge Function e configura o segredo:
    ```bash
    supabase functions deploy classify-ticket
-   supabase secrets set ANTHROPIC_API_KEY=sua_chave_aqui
+   supabase secrets set GEMINI_API_KEY=sua_chave_aqui
    ```
 
 ---
