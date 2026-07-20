@@ -2,7 +2,7 @@
 
 An AI-powered support ticket triage system. Requesters describe their issue in plain language; Google Gemini automatically suggests a category, urgency level, and first diagnostic steps — the same first-response thinking a helpdesk analyst does manually, now assisted by AI.
 
-🔗 **Live demo:** [add the link here after deploying]
+🔗 **Live demo:** [https://ticketsense.netlify.app/]
 
 ![Project screenshot](public/screenshot1.png)
 ![Project screenshot](public/screenshot2.png)
