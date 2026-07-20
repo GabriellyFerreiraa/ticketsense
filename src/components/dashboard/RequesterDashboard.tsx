@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import { NewTicketForm } from '@/components/forms/NewTicketForm';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { UrgencyBadge, CategoryBadge, StatusBadge } from '@/components/TicketBadges';
 import { formatDistanceToNow } from 'date-fns';
-import { ListChecks } from 'lucide-react';
+import { ListChecks, Trash2 } from 'lucide-react';
 
 interface Ticket {
   id: string;
@@ -22,6 +24,7 @@ export const RequesterDashboard = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const fetchTickets = async () => {
     if (!user) return;
@@ -32,6 +35,18 @@ export const RequesterDashboard = () => {
       .order('created_at', { ascending: false });
     setTickets((data as any) || []);
     setLoading(false);
+  };
+
+  const deleteTicket = async (ticketId: string) => {
+    if (!window.confirm('Delete this ticket? This cannot be undone.')) return;
+
+    const { error } = await supabase.from('tickets').delete().eq('id', ticketId);
+    if (error) {
+      toast({ title: 'Error', description: 'Could not delete the ticket', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Ticket deleted' });
+    fetchTickets();
   };
 
   useEffect(() => {
@@ -82,6 +97,17 @@ export const RequesterDashboard = () => {
                     </ul>
                   </div>
                 )}
+                <div className="flex justify-end">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => deleteTicket(ticket.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete
+                  </Button>
+                </div>
               </div>
             ))
           )}
