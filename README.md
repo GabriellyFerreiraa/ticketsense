@@ -4,7 +4,8 @@ An AI-powered support ticket triage system. Requesters describe their issue in p
 
 🔗 **Live demo:** [add the link here after deploying]
 
-![Project screenshot](public/screenshot.png)
+![Project screenshot](public/screenshot1.png)
+![Project screenshot](public/screenshot2.png)
 <!-- Replace with a real screenshot of the Agent dashboard -->
 
 ---
