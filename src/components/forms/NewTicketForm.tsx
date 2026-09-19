@@ -26,7 +26,7 @@ export const NewTicketForm = ({ onSuccess }: NewTicketFormProps) => {
     setIsSubmitting(true);
 
     try {
-      // Step 1: ask the Edge Function to classify the ticket with Claude.
+      // Step 1: ask the Edge Function to classify the ticket with Gemini.
       // If this fails for any reason, we still create the ticket —
       // an agent can classify it manually. The AI is a helper, not a blocker.
       let aiResult: { category?: string; urgency?: string; suggested_steps?: string[] } = {};

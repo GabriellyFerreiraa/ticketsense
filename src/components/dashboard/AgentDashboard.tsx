@@ -173,7 +173,7 @@ export const AgentDashboard = () => {
               )}
 
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <Select onValueChange={(v) => overrideClassification(ticket.id, 'final_urgency', v)}>
+                <Select value={ticket.final_urgency ?? undefined} onValueChange={(v) => overrideClassification(ticket.id, 'final_urgency', v)}>
                   <SelectTrigger className="w-36 h-8 text-xs">
                     <SelectValue placeholder="Override urgency" />
                   </SelectTrigger>
@@ -185,7 +185,7 @@ export const AgentDashboard = () => {
                   </SelectContent>
                 </Select>
 
-                <Select onValueChange={(v) => overrideClassification(ticket.id, 'final_category', v)}>
+                <Select value={ticket.final_category ?? undefined} onValueChange={(v) => overrideClassification(ticket.id, 'final_category', v)}>
                   <SelectTrigger className="w-40 h-8 text-xs">
                     <SelectValue placeholder="Override category" />
                   </SelectTrigger>
